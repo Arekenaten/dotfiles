@@ -1,5 +1,6 @@
 {
     "python.jediEnabled": false,
+    "rust-analyzer.enable": true,
     "eslint.autoFixOnSave": true,
     "coc.source.file.triggerCharacters":  [".", "/"],
     "suggest.completionItemKindLabels": {

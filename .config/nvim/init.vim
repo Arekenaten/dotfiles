@@ -14,11 +14,7 @@ endfunction
 
 " External Plugins
 call plug#begin("~/.vim/plugged")
-    Plug 'neoclide/coc.nvim', {'branch': 'release'}
-    let g:coc_global_extensions = [
-                \ 'coc-tsserver',
-                \ 'coc-pyright'
-                \ ]
+    " Generic plugins
     Plug 'sheerun/vim-polyglot'
     Plug 'tpope/vim-fugitive'
     Plug 'vim-airline/vim-airline'
@@ -26,6 +22,13 @@ call plug#begin("~/.vim/plugged")
 	Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 	Plug 'junegunn/fzf.vim'
     Plug 'ggreer/the_silver_searcher'
+
+    " Rust
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'simrat39/rust-tools.nvim'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/cmp-nvim-lsp'"
+    Plug 'hrsh7th/vim-vsnip'
 call plug#end()
 " }}}
 
@@ -120,6 +123,11 @@ augroup python_files
         \ setlocal fileformat=unix |
         \ setlocal foldmethod=manual
 augroup END
+
+augroup rust_files
+    autocmd!
+    autocmd BufWritePre *.rs lua vim.lsp.buf.formatting_sync(nil, 200)
+
 " }}}
 
 " Vimscript Tweaks -------------------- {{{
@@ -129,6 +137,60 @@ set grepformat=%f:%l:%c:%m
 " }}}
 
 " Plugin Configs ---------------------- {{{
+" Rust stuff ---------------------------{{{
+
+" Set completeopt to have a better completion experience
+" :help completeopt
+" menuone: popup even when there's only one match
+" noinsert: Do not insert text until a selection is made
+" noselect: Do not select, force user to select one from the menu
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing extra messages when using completion
+set shortmess+=c
+
+" Load rust-tools config from Lua file
+:lua require('rust-tools-init')
+
+" Setup Completion
+" See https://github.com/hrsh7th/nvim-cmp#basic-configuration
+lua <<EOF
+local cmp = require'cmp'
+cmp.setup({
+  -- Enable LSP snippets
+  snippet = {
+    expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  mapping = {
+    ['<C-p>'] = cmp.mapping.select_prev_item(),
+    ['<C-n>'] = cmp.mapping.select_next_item(),
+    -- Add tab support
+    ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+    ['<Tab>'] = cmp.mapping.select_next_item(),
+    ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.close(),
+    ['<CR>'] = cmp.mapping.confirm({
+      behavior = cmp.ConfirmBehavior.Insert,
+      select = true,
+    })
+  },
+
+  -- Installed sources
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' },
+    { name = 'path' },
+    { name = 'buffer' },
+  },
+})
+EOF
+
+" }}}"
+
 " NERDTree ---------------------------- {{{
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeMinimalUI = 1
@@ -144,36 +206,6 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 let $FZF_DEFAULT_COMMAND = 'ag -g ""'
-" }}}
-
-" Coc --------------------------------- {{{
-" Custom functions -------------------- {{{
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-" }}}
-" Enable eslint if it's there
-if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
-    let g:coc_global_extensions += ['coc-eslint']
-endif
-
-nmap <silent> <leader>d <Plug>(coc-definition)
-nmap <silent> <leader>K :call <SID>show_documentation()<CR>
-nmap <leader>rn <Plug>(coc-rename)
-" Tab in insert mode to trigger completion
-inoremap <silent><expr> <Tab>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<Tab>" :
-      \ coc#refresh()
 " }}}
 " }}}
 
