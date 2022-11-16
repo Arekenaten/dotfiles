@@ -2,7 +2,6 @@ local o = vim.opt
 local cmd = vim.cmd
 
 -- Ui
-
 cmd "syntax enable"
 cmd "colorscheme onedark"
 o.cursorline = true
@@ -24,6 +23,5 @@ o.wrap = false
 o.completeopt="menuone,noinsert,noselect"
 
 -- General
-
 o.ignorecase = true
 o.smartcase = true
