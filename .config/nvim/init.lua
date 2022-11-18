@@ -15,5 +15,6 @@ require "user.settings"
 require "user.maps"
 
 require "user.lsp.lua"
+require "user.lsp.rust"
 
 
