@@ -21,6 +21,7 @@ o.signcolumn = "yes"
 o.tabstop = 4
 o.wrap = false
 o.completeopt="menuone,noinsert,noselect"
+o.shortmess = o.shortmess + "c"
 
 -- General
 o.ignorecase = true
