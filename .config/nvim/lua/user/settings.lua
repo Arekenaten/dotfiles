@@ -1,9 +1,13 @@
 local o = vim.opt
+local g = vim.g
 local cmd = vim.cmd
+
+-- Disable netrw so nvimtree can work
+g.loaded_netrw = 1
+g.loaded_netrwPlugin = 1
 
 -- Ui
 cmd "syntax enable"
-cmd "colorscheme onedark"
 o.cursorline = true
 o.expandtab = true
 o.foldmethod = "syntax"

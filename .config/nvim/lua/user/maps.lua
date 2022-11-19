@@ -8,21 +8,6 @@ vim.g.mapleader = ' '
 -- jk exit insert
 map('i', 'jk', '<esc>', opts)
 
--- Editor shortcuts
-map('i', '(', '()<left>', opts)
-map('i', '[', '[]<left>', opts)
-map('i', '{', '{}<left>', opts)
-map('i', '{<CR>', '{<CR>}<ESC>O', opts)
-map('i', '{;<CR>', '{<CR>};<ESC>O', opts)
-
-vim.api.nvim_exec([[
-    inoremap <expr> ) strpart(getline('.'), col('.')-1, 1) == ")" ? "\<Right>" : ")"
-    inoremap <expr> } strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
-    inoremap <expr> ' strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "''<left>"
-    inoremap <expr> " strpart(getline('.'), col('.')-1, 1) == "\"" ? "\<Right>" : '""<left>'
-    inoremap <expr> ] strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
-]], false)
-
 -- Clear highlights
 map('n', '<leader><cr>', ':nohlsearch<cr>', opts)
 
@@ -36,5 +21,9 @@ map('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
 map('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 map('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
 
--- Lexplore
-map('n', '<leader>e', ':Lex 40<cr>', opts);
+-- Nvim Tree
+map('n', '<leader>e', ':NvimTreeToggle<cr>', opts);
+
+-- Telescope
+map('n', '<leader>ff', ':Telescope find_files<cr>', opts);
+map('n', '<leader>fg', ':Telescope live_grep<cr>', opts);
