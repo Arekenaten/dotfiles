@@ -1,2 +1,17 @@
+# Compiled binary and backup files
+**/target/
+**/*.old
+**/*.bak
+
+# Ignore editor/IDE specific files
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
+
+# System files
 .DS_Store
 .config/pgcli
+
+# Log files
+*.log
